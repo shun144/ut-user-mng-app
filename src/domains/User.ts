@@ -1,23 +1,29 @@
-import {
-  UserType,
-  GetUserById,
-  GetCompany,
-  SaveUser,
-  SaveCompany,
-} from "@/libs/Database";
-import { SendEmailChangedMessage } from "@/libs/MessageBus";
+export const UserType = {
+  Customer: "Customer",
+  Employee: "Employee",
+  None: "None",
+} as const;
 
+export type TUserType = keyof typeof UserType;
+
+// Userクラスは外部プロセス（DBやMessageBusとの通信がなくなった）
 export class User {
-  static changeEmail(userId: number, newEmail: string) {
-    const userData = GetUserById(userId)!;
-    const email = userData.email;
-    const userType = userData.userType;
+  id: number;
+  email: string;
+  userType: TUserType;
 
-    if (email === newEmail) return;
+  constructor(id: number, email: string, userType: TUserType) {
+    this.id = id;
+    this.email = email;
+    this.userType = userType;
+  }
 
-    const companyData = GetCompany();
-    const companyDomainName = companyData.domainName;
-    const numberOfEmployees = companyData.numberOfEmployees;
+  changeEmail(
+    newEmail: string,
+    companyDomainName: string,
+    numberOfEmployees: number,
+  ) {
+    if (this.email === newEmail) return numberOfEmployees;
 
     const emailDomain = newEmail.split("@")[1];
     const isEmailCorporate = emailDomain === companyDomainName;
@@ -26,20 +32,11 @@ export class User {
       ? UserType.Employee
       : UserType.Customer;
 
-    if (userType !== newUserType) {
-      const delta = newUserType === UserType.Employee ? 1 : -1;
-      const newNumber = numberOfEmployees + delta;
+    this.email = newEmail;
 
-      SaveCompany(newNumber);
-    }
+    if (this.userType == newUserType) return numberOfEmployees;
 
-    const newUser = {
-      id: userId,
-      email: newEmail,
-      userType: newUserType,
-    };
-
-    SaveUser(newUser);
-    SendEmailChangedMessage(userId, newEmail);
+    this.userType = newUserType;
+    return numberOfEmployees + (newUserType === UserType.Employee ? 1 : -1);
   }
 }

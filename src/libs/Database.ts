@@ -1,10 +1,4 @@
-export const UserType = {
-  Customer: "Customer",
-  Employee: "Employee",
-  None: "None",
-} as const;
-
-export type TUserType = keyof typeof UserType;
+import { UserType } from "@/domains/User";
 
 const UserDataList = [
   { id: 1, email: "one@aaacompany.co.jp", userType: UserType.Customer },

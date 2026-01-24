@@ -1,9 +1,9 @@
 import React from "react";
-import { User } from "@/domains/User";
+import { UserController } from "@/domains/UserController";
 
 const App = () => {
   const onClick = () => {
-    User.changeEmail(1, "two@aaacompany.co.jp");
+    UserController.changeEmail(1, "two@customer.co.jp");
   };
 
   return (
