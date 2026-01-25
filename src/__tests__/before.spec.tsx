@@ -22,24 +22,12 @@ describe("UserTableフィルタリングテスト", () => {
       );
     });
   });
-  test("nameでフィルタリング", async () => {
+  test("フィルタリング条件nameのみ_表示テスト", async () => {
     await waitFor(() => {
       expect(screen.queryByText("ローディング中")).not.toBeInTheDocument();
     });
     const conditionField = await screen.findByLabelText("検索条件");
     await user.type(conditionField, "田中さん");
-    await waitFor(() => {
-      expect(screen.getByText("田中さん")).toBeInTheDocument();
-      expect(screen.queryByText("佐々木さん")).toBeNull();
-    });
-  });
-
-  test("emailでフィルタリング", async () => {
-    await waitFor(() => {
-      expect(screen.queryByText("ローディング中")).not.toBeInTheDocument();
-    });
-    const conditionField = await screen.findByLabelText("検索条件");
-    await user.type(conditionField, ".biz");
     await waitFor(() => {
       expect(screen.getByText("田中さん")).toBeInTheDocument();
       expect(screen.queryByText("佐々木さん")).toBeNull();

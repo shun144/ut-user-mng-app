@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BeforeUserTable from "@/components/BeforeUserTable";
+import AfterUserTable from "@/components/AfterUserTable";
 import { User } from "./User";
 import type { JsonUser } from "./type";
 
@@ -24,7 +25,8 @@ const UserPage = () => {
     return <div>ローディング中</div>;
   }
 
-  return <BeforeUserTable initialUsers={initialUsers} />;
+  //   return <BeforeUserTable initialUsers={initialUsers} />;
+  return <AfterUserTable initialUsers={initialUsers} />;
 };
 
 export default UserPage;

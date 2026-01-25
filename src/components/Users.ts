@@ -3,8 +3,8 @@ import { User } from "./User";
 export class Users {
   initialUsers: User[];
 
-  constructor() {
-    this.initialUsers = [];
+  constructor(initialUsers: User[]) {
+    this.initialUsers = initialUsers;
   }
 
   filterUsers(filterValue?: string) {
