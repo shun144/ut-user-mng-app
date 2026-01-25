@@ -1,6 +1,7 @@
 import { Database } from "@/domains/Database";
 import { MessageBus } from "@/domains/MessageBus";
 import { User } from "./User";
+import { UserFactory } from "@/domains/UserFactory";
 
 // ドメインモデルとプロセス外依存との連携を指揮するだけ
 export class UserController {
@@ -13,7 +14,7 @@ export class UserController {
     const email = userData.email;
     const userType = userData.userType;
 
-    const user = new User(userId, email, userType);
+    const user = UserFactory.Create(userId, email, userType);
 
     const companyData = this._database.GetCompany();
     const companyDomainName = companyData.domainName;
@@ -24,8 +25,6 @@ export class UserController {
       companyDomainName,
       numberOfEmployees,
     );
-
-    console.log({ newNumberOfEmployees });
 
     this._database.SaveCompany(newNumberOfEmployees);
     this._database.SaveUser(user);
