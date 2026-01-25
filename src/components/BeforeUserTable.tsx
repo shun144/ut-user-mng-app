@@ -1,49 +1,30 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, type FC } from "react";
 import { User } from "./User";
-import type { JsonUser } from "./type";
 
-const BeforeUserTable = () => {
-  const initialUsers = useRef<User[]>([]);
+interface Props {
+  initialUsers: User[];
+}
+
+const BeforeUserTable: FC<Props> = ({ initialUsers }) => {
   const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [filterCondition, setFilterCondition] = useState<string>("");
 
   useEffect(() => {
-    (async () => {
-      const res = await fetch("https://jsonplaceholder.typicode.com/users");
-      if (res.ok) {
-        const fetchedUser = (await res.json()) as JsonUser[];
-        const userList = fetchedUser.map(
-          (x) => new User(x.id, x.name, x.email, x.phone, x.website),
-        );
-        initialUsers.current = userList;
-        setUsers(userList);
-        setIsLoading(false);
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
     if (filterCondition === "") {
-      setUsers(initialUsers.current);
+      setUsers(initialUsers);
       return;
     }
-
-    const filteredUsers = initialUsers.current.filter((x) => {
-      const val = filterCondition.toLocaleLowerCase();
-      const isPass =
+    const val = filterCondition.toLocaleLowerCase();
+    const filteredUsers = initialUsers.filter((x) => {
+      return (
         x.name.toLowerCase().includes(val) ||
         x.email.toLowerCase().includes(val) ||
         x.phone.toLowerCase().includes(val) ||
-        x.website.toLowerCase().includes(val);
-      return isPass;
+        x.website.toLowerCase().includes(val)
+      );
     });
     setUsers(filteredUsers);
   }, [filterCondition]);
-
-  if (isLoading) {
-    return <div>ローディング中</div>;
-  }
 
   return (
     <div>

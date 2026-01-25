@@ -1,8 +1,9 @@
 import React from "react";
-import BeforeUserTable from "./components/BeforeUserTable";
+// import BeforeUserTable from "./components/BeforeUserTable";
+import UserPage from "@/components/UserPage";
 
 const App = () => {
-  return <BeforeUserTable />;
+  return <UserPage />;
 };
 
 export default App;
