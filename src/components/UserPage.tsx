@@ -25,8 +25,8 @@ const UserPage = () => {
     return <div>ローディング中</div>;
   }
 
-  //   return <BeforeUserTable initialUsers={initialUsers} />;
-  return <AfterUserTable initialUsers={initialUsers} />;
+  return <BeforeUserTable initialUsers={initialUsers} />;
+  //   return <AfterUserTable initialUsers={initialUsers} />;
 };
 
 export default UserPage;
