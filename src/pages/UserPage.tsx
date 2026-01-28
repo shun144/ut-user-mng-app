@@ -1,8 +1,31 @@
 import React, { useEffect, useState } from "react";
 import BeforeUserTable from "@/components/BeforeUserTable";
 import AfterUserTable from "@/components/AfterUserTable";
-import { User } from "../domains/User";
-import type { JsonUser } from "../components/type";
+import { User } from "@/domains/User";
+
+interface JsonUser {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  address: {
+    street: string;
+    suite: string;
+    city: string;
+    zipcode: string;
+    geo: {
+      lat: string;
+      lng: string;
+    };
+  };
+  phone: string;
+  website: string;
+  company: {
+    name: string;
+    catchPhrase: string;
+    bs: string;
+  };
+}
 
 const UserPage = () => {
   const [isLoading, setIsLoading] = useState(true);
