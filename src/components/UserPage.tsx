@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import BeforeUserTable from "@/components/BeforeUserTable";
 import AfterUserTable from "@/components/AfterUserTable";
-import { User } from "./User";
+import { User } from "../domains/User";
 import type { JsonUser } from "./type";
 
 const UserPage = () => {

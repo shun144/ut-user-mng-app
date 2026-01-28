@@ -1,5 +1,5 @@
 import { useEffect, useState, type FC } from "react";
-import { User } from "./User";
+import { User } from "../domains/User";
 import "./table.css";
 
 interface Props {

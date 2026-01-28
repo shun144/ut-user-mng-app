@@ -1,5 +1,5 @@
 import AfterUserTable from "@/components/AfterUserTable";
-import { Users } from "@/components/Users";
+import { Users } from "@/domains/Users";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
