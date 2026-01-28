@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import BeforeUserTable from "@/components/BeforeUserTable";
 import AfterUserTable from "@/components/AfterUserTable";
 import { User } from "../domains/User";
-import type { JsonUser } from "./type";
+import type { JsonUser } from "../components/type";
 
 const UserPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -25,7 +25,11 @@ const UserPage = () => {
     return <div>ローディング中</div>;
   }
 
-  return <BeforeUserTable initialUsers={initialUsers} />;
+  return (
+    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 py-8 px-4">
+      <BeforeUserTable initialUsers={initialUsers} />
+    </div>
+  );
   //   return <AfterUserTable initialUsers={initialUsers} />;
 };
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FC } from "react";
 import { User } from "../domains/User";
 import { Users } from "../domains/Users";
-import "./table.css";
+// import "./table.css";
 
 interface Props {
   initialUsers: User[];
