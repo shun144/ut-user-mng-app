@@ -11,7 +11,14 @@ describe("ユーザ一覧テスト", () => {
         initialUsers={[
           {
             id: 1,
-            name: "田中さん",
+            name: "田中太郎",
+            email: "tanaka@april.biz",
+            phone: "1-770-736-8031 x56442",
+            website: "hildegard.org",
+          },
+          {
+            id: 2,
+            name: "田中花子",
             email: "tanaka@april.biz",
             phone: "1-770-736-8031 x56442",
             website: "hildegard.org",
@@ -24,14 +31,24 @@ describe("ユーザ一覧テスト", () => {
     await waitFor(() => {
       expect(screen.queryByText("ローディング中")).not.toBeInTheDocument();
     });
-    const conditionField = await screen.findByLabelText("検索条件");
+    const keywordField = await screen.findByLabelText("検索条件");
+    await user.type(keywordField, "田中");
 
-    await user.type(conditionField, "田中");
-    const rows = screen.getAllByRole("row");
+    const sut = await screen.findAllByText("田中");
+    const table = await screen.findByRole("table");
 
     await waitFor(() => {
-      expect(screen.queryByText("田中さん")).toBeInTheDocument();
-      expect(rows.length - 1).toBe(1);
+      // レコード値チェック
+      expect(table).toHaveTextContent("田中太郎");
+      expect(table).toHaveTextContent("田中花子");
+
+      // レコード数チェック
+      expect(screen.getAllByRole("row").length - 1).toBe(2);
+
+      // ハイライトチェック
+      sut.forEach((x) =>
+        expect(x).toHaveAttribute("style", "background:#FFB3BF;"),
+      );
     });
   });
 });

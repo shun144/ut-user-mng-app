@@ -12,11 +12,18 @@ describe("ユーザ一覧テスト", () => {
     filterUsersSpy.mockClear();
   });
 
-  test("フィルタリング機能テスト_データあり", async () => {
+  test("フィルタリング機能テスト_描画_データあり", async () => {
     filterUsersSpy.mockReturnValue([
       {
         id: 1,
-        name: "田中さん",
+        name: "田中太郎",
+        email: "tanaka@april.biz",
+        phone: "1-770-736-8031 x56442",
+        website: "hildegard.org",
+      },
+      {
+        id: 2,
+        name: "田中花子",
         email: "tanaka@april.biz",
         phone: "1-770-736-8031 x56442",
         website: "hildegard.org",
@@ -34,25 +41,25 @@ describe("ユーザ一覧テスト", () => {
 
     await waitFor(() => {
       expect(filterUsersSpy).toHaveBeenCalledTimes(1);
-      expect(screen.queryByText("田中さん")).toBeInTheDocument();
+      expect(screen.queryByText("田中太郎")).toBeInTheDocument();
+      expect(screen.queryByText("田中花子")).toBeInTheDocument();
       expect(rows.length - 1).toBe(1);
     });
   });
 
-  test("フィルタリング機能テスト_データなし", async () => {
+  test("フィルタリング機能テスト_描画_データなし", async () => {
     filterUsersSpy.mockReturnValue([]);
     await waitFor(() => {
       expect(screen.queryByText("ローディング中")).not.toBeInTheDocument();
     });
 
     const conditionField = await screen.findByLabelText("検索条件");
-
     await user.type(conditionField, "a");
     const rows = screen.getAllByRole("row");
-
     await waitFor(() => {
       expect(filterUsersSpy).toHaveBeenCalledTimes(1);
-      expect(screen.queryByText("田中さん")).not.toBeInTheDocument();
+      expect(screen.queryByText("田中太郎")).not.toBeInTheDocument();
+      expect(screen.queryByText("田中花子")).not.toBeInTheDocument();
       expect(rows.length - 1).toBe(0);
     });
   });

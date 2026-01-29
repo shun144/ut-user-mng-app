@@ -1,9 +1,5 @@
 import { User } from "./User";
 
-export type UserWithCol = User & {
-  col?: string;
-};
-
 export class Users {
   initialUsers: User[];
 
@@ -11,31 +7,28 @@ export class Users {
     this.initialUsers = initialUsers;
   }
 
-  // filterUsers(filterValue?: string) {
-  //   if (!filterValue) return this.initialUsers;
+  #setHighlight(val: string, keyword: string) {
+    return `${val.replace(keyword, `<span style="background:#FFB3BF;">${keyword}</span>`)}`;
+  }
 
-  //   return this.initialUsers.filter(
-  //     (x) =>
-  //       x.name.toLowerCase().includes(filterValue) ||
-  //       x.email.toLowerCase().includes(filterValue) ||
-  //       x.phone.toLowerCase().includes(filterValue) ||
-  //       x.website.toLowerCase().includes(filterValue),
-  //   );
-  // }
-
-  filterUsers(keyword?: string): UserWithCol[] {
+  filterUsers(keyword?: string) {
     if (!keyword) return this.initialUsers;
+    return this.initialUsers.filter(
+      (x) =>
+        x.name.includes(keyword) ||
+        x.email.includes(keyword) ||
+        x.phone.includes(keyword) ||
+        x.website.includes(keyword),
+    );
+  }
 
-    const filteredUsers: UserWithCol[] = this.initialUsers.flatMap((x) => {
-      if (x.name.toLowerCase().includes(keyword)) return { ...x, col: "name" };
-      if (x.email.toLowerCase().includes(keyword))
-        return { ...x, col: "email" };
-      if (x.phone.toLowerCase().includes(keyword))
-        return { ...x, col: "phone" };
-      if (x.website.toLowerCase().includes(keyword))
-        return { ...x, col: "website" };
-      return [];
-    });
-    return filteredUsers;
+  filterUsersWithHighlight(keyword?: string) {
+    return this.filterUsers(keyword).map((x) => ({
+      ...x,
+      name: this.#setHighlight(x.name, keyword!),
+      email: this.#setHighlight(x.email, keyword!),
+      phone: this.#setHighlight(x.phone, keyword!),
+      website: this.#setHighlight(x.website, keyword!),
+    }));
   }
 }

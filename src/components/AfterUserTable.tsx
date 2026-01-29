@@ -1,22 +1,15 @@
 import { useEffect, useRef, useState, type FC } from "react";
 import { User } from "@/domains/User";
-import { Users, type UserWithCol } from "@/domains/Users";
+import { Users } from "@/domains/Users";
 interface Props {
   initialUsers: User[];
 }
 const cols = ["name", "email", "phone", "website"] as const;
-type TCols = (typeof cols)[number];
-const colColor: { [key in TCols]: string } = {
-  name: "#FFEAEA",
-  email: "#D3E0F9",
-  phone: "#D7F8E6",
-  website: "#FFF0E0",
-};
 
-const UserTable: FC<Props> = ({ initialUsers }) => {
+const AfterUserTable: FC<Props> = ({ initialUsers }) => {
   const usersRef = useRef<Users | null>(null);
-  const [users, setUsers] = useState<UserWithCol[]>([]);
-  const [filterCondition, setFilterCondition] = useState<string>("");
+  const [users, setUsers] = useState<User[]>([]);
+  const [keyword, setKeyword] = useState("");
 
   useEffect(() => {
     usersRef.current = new Users(initialUsers);
@@ -25,10 +18,10 @@ const UserTable: FC<Props> = ({ initialUsers }) => {
 
   useEffect(() => {
     if (!usersRef.current) return;
-    const keyword = filterCondition.toLocaleLowerCase();
-    const filteredUsers = usersRef.current.filterUsers(keyword);
+    const filteredUsers = usersRef.current.filterUsersWithHighlight(keyword);
+
     setUsers(filteredUsers);
-  }, [filterCondition]);
+  }, [keyword]);
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -47,8 +40,8 @@ const UserTable: FC<Props> = ({ initialUsers }) => {
           <input
             id="filterCondition"
             type="text"
-            onChange={(e) => setFilterCondition(e.target.value)}
-            value={filterCondition}
+            onChange={(e) => setKeyword(e.target.value)}
+            value={keyword}
             placeholder="キーワード入力"
             className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent"
           />
@@ -70,16 +63,23 @@ const UserTable: FC<Props> = ({ initialUsers }) => {
                 <tr
                   className={`bg-neutral-primary ${index === users.length - 1 ? "" : "border-b border-gray-300"} `}
                   key={user.id}
-                  style={{
-                    background: user.col
-                      ? colColor[user.col as TCols]
-                      : "white",
-                  }}
                 >
-                  <td className="px-6 py-4">{user.name}</td>
-                  <td className="px-6 py-4">{user.email}</td>
-                  <td className="px-6 py-4">{user.phone}</td>
-                  <td className="px-6 py-4">{user.website}</td>
+                  <td
+                    className="px-6 py-4"
+                    dangerouslySetInnerHTML={{ __html: user.name }}
+                  />
+                  <td
+                    className="px-6 py-4"
+                    dangerouslySetInnerHTML={{ __html: user.email }}
+                  />
+                  <td
+                    className="px-6 py-4"
+                    dangerouslySetInnerHTML={{ __html: user.phone }}
+                  />
+                  <td
+                    className="px-6 py-4"
+                    dangerouslySetInnerHTML={{ __html: user.website }}
+                  />
                 </tr>
               ))}
             </tbody>
@@ -90,4 +90,4 @@ const UserTable: FC<Props> = ({ initialUsers }) => {
   );
 };
 
-export default UserTable;
+export default AfterUserTable;

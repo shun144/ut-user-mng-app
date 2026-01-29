@@ -50,7 +50,7 @@ const UserPage = () => {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 py-8 px-4">
-      <BeforeUserTable initialUsers={initialUsers} />
+      <AfterUserTable initialUsers={initialUsers} />
     </div>
   );
 };
