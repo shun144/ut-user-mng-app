@@ -1,16 +1,21 @@
 import { useEffect, useRef, useState, type FC } from "react";
 import { User } from "@/domains/User";
-import { Users } from "@/domains/Users";
-
+import { Users, type UserWithCol } from "@/domains/Users";
 interface Props {
   initialUsers: User[];
 }
-
-const cols = ["name", "email", "phone", "website"];
+const cols = ["name", "email", "phone", "website"] as const;
+type TCols = (typeof cols)[number];
+const colColor: { [key in TCols]: string } = {
+  name: "#FFEAEA",
+  email: "#D3E0F9",
+  phone: "#D7F8E6",
+  website: "#FFF0E0",
+};
 
 const UserTable: FC<Props> = ({ initialUsers }) => {
   const usersRef = useRef<Users | null>(null);
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserWithCol[]>([]);
   const [filterCondition, setFilterCondition] = useState<string>("");
 
   useEffect(() => {
@@ -20,8 +25,8 @@ const UserTable: FC<Props> = ({ initialUsers }) => {
 
   useEffect(() => {
     if (!usersRef.current) return;
-    const val = filterCondition.toLocaleLowerCase();
-    const filteredUsers = usersRef.current.filterUsers(val);
+    const keyword = filterCondition.toLocaleLowerCase();
+    const filteredUsers = usersRef.current.filterUsers(keyword);
     setUsers(filteredUsers);
   }, [filterCondition]);
 
@@ -65,6 +70,11 @@ const UserTable: FC<Props> = ({ initialUsers }) => {
                 <tr
                   className={`bg-neutral-primary ${index === users.length - 1 ? "" : "border-b border-gray-300"} `}
                   key={user.id}
+                  style={{
+                    background: user.col
+                      ? colColor[user.col as TCols]
+                      : "white",
+                  }}
                 >
                   <td className="px-6 py-4">{user.name}</td>
                   <td className="px-6 py-4">{user.email}</td>

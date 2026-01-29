@@ -5,10 +5,14 @@ interface Props {
   initialUsers: User[];
 }
 
-const cols = ["name", "email", "phone", "website"];
+type UserWithColor = User & {
+  color?: string;
+};
+
+const cols = ["name", "email", "phone", "website"] as const;
 
 const BeforeUserTable: FC<Props> = ({ initialUsers }) => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserWithColor[]>([]);
   const [filterCondition, setFilterCondition] = useState<string>("");
 
   useEffect(() => {
@@ -16,15 +20,19 @@ const BeforeUserTable: FC<Props> = ({ initialUsers }) => {
       setUsers(initialUsers);
       return;
     }
-    const val = filterCondition.toLocaleLowerCase();
-    const filteredUsers = initialUsers.filter((x) => {
-      return (
-        x.name.toLowerCase().includes(val) ||
-        x.email.toLowerCase().includes(val) ||
-        x.phone.toLowerCase().includes(val) ||
-        x.website.toLowerCase().includes(val)
-      );
+    const keyword = filterCondition.toLocaleLowerCase();
+    const filteredUsers: UserWithColor[] = initialUsers.flatMap((x) => {
+      if (x.name.toLowerCase().includes(keyword))
+        return { ...x, color: "#FFEAEA" };
+      if (x.email.toLowerCase().includes(keyword))
+        return { ...x, color: "#D3E0F9" };
+      if (x.phone.toLowerCase().includes(keyword))
+        return { ...x, color: "#D7F8E6" };
+      if (x.website.toLowerCase().includes(keyword))
+        return { ...x, color: "#FFF0E0" };
+      return [];
     });
+
     setUsers(filteredUsers);
   }, [filterCondition]);
 
@@ -66,7 +74,8 @@ const BeforeUserTable: FC<Props> = ({ initialUsers }) => {
             <tbody>
               {users.map((user, index) => (
                 <tr
-                  className={`bg-neutral-primary ${index === users.length - 1 ? "" : "border-b border-gray-300"} `}
+                  className={`${index === users.length - 1 ? "" : "border-b border-gray-300"}`}
+                  style={{ background: user?.color ?? "white" }}
                   key={user.id}
                 >
                   <td className="px-6 py-4">{user.name}</td>
