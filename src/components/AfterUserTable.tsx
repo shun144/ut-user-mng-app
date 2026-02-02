@@ -1,26 +1,36 @@
-import { useEffect, useRef, useState, type FC } from "react";
 import { User } from "@/domains/User";
-import { Users } from "@/domains/Users";
+import { useMemo, useState, type FC } from "react";
 interface Props {
   initialUsers: User[];
 }
 const cols = ["name", "email", "phone", "website"] as const;
 
+const setHighlight = (val: string, keyword: string) => {
+  return `${val.replace(keyword, `<span style="background:#FFB3BF;">${keyword}</span>`)}`;
+};
+
 const AfterUserTable: FC<Props> = ({ initialUsers }) => {
-  const usersRef = useRef<Users | null>(null);
-  const [users, setUsers] = useState<User[]>([]);
   const [keyword, setKeyword] = useState("");
 
-  useEffect(() => {
-    usersRef.current = new Users(initialUsers);
-    setUsers(initialUsers);
-  }, []);
+  const filteredUsersWithHighlight = useMemo(() => {
+    if (!keyword) return initialUsers;
+    const result = initialUsers
+      .filter(
+        (x) =>
+          x.name.includes(keyword) ||
+          x.email.includes(keyword) ||
+          x.phone.includes(keyword) ||
+          x.website.includes(keyword),
+      )
+      .map((x) => ({
+        ...x,
+        name: setHighlight(x.name, keyword!),
+        email: setHighlight(x.email, keyword!),
+        phone: setHighlight(x.phone, keyword!),
+        website: setHighlight(x.website, keyword!),
+      }));
 
-  useEffect(() => {
-    if (!usersRef.current) return;
-    const filteredUsers = usersRef.current.filterUsersWithHighlight(keyword);
-
-    setUsers(filteredUsers);
+    return result;
   }, [keyword]);
 
   return (
@@ -59,9 +69,9 @@ const AfterUserTable: FC<Props> = ({ initialUsers }) => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user, index) => (
+              {filteredUsersWithHighlight.map((user, index) => (
                 <tr
-                  className={`bg-neutral-primary ${index === users.length - 1 ? "" : "border-b border-gray-300"} `}
+                  className={`bg-neutral-primary ${index === filteredUsersWithHighlight.length - 1 ? "" : "border-b border-gray-300"} `}
                   key={user.id}
                 >
                   <td

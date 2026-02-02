@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import BeforeUserTable from "@/components/BeforeUserTable";
 import AfterUserTable from "@/components/AfterUserTable";
 import { User } from "@/domains/User";
+import { useEffect, useState } from "react";
 
 interface JsonUser {
   id: number;
